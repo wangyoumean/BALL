@@ -10,13 +10,13 @@
 class MyWidget : public QWidget {
     Q_OBJECT
 public:
-    MyWidget(QWidget *parent = nullptr) ;
+   explicit MyWidget(QWidget *parent = nullptr) ;//explicit用于避免出现隐式类型转换
 
 protected:
     void paintEvent(QPaintEvent *event) override; //override表明该成员函数用来重写基类中的虚函数
 
 
-private slots:
+private slots://关于是否采用public slot的问题，等写到控制按钮时再决定
         void updateBallPosition();//这里只声明函数
         //4.19:迁移完成，再次说明，出现链接问题，请先清除，再重新构建
 
