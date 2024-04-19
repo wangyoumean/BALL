@@ -10,7 +10,7 @@
 class MyWidget : public QWidget {
     Q_OBJECT
 public:
-    MyWidget(QWidget *parent = nullptr) ;
+   explicit MyWidget(QWidget *parent = nullptr) ;
 
 protected:
     void paintEvent(QPaintEvent *event) override; //override表明该成员函数用来重写基类中的虚函数
