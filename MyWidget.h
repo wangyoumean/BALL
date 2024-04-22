@@ -26,12 +26,13 @@ private:
     int rectWidth; // 矩形框宽度
     int rectHeight; // 矩形框高度
 
-    int ballX; // 小球 x 坐标
-    int ballY; // 小球 y 坐标
+    float ballX; // 小球 x 坐标
+    float ballY; // 小球 y 坐标
     int r;
-    int dx; // 小球水平方向速度
-    int dy; // 小球垂直方向速度
-    double gravity; //重力加速度
+    float dx; // 小球水平方向速度
+    float dy; // 小球垂直方向速度
+    float gravity; //重力加速度
+    float q;//碰撞系数
 
 
 };
