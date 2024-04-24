@@ -1,20 +1,22 @@
-#include "mainwindow.h"
 
 #include <QApplication>
 #include "MyWidget.h"
 
 
 int main(int argc, char *argv[]) {
-    QApplication app(argc, argv);
+    QApplication a(argc, argv);
 
     MyWidget widget;
-    widget.resize(400, 500);
-    widget.setWindowTitle("Ball in Rectangle");
+    widget.resize(400, 500);//设置界面大小
+    widget.move(600,150);
+    widget.setFixedSize(widget.width(),widget.height());//锁定界面大小
+
+    widget.setWindowTitle("运动小球");
 
 
     widget.show();
 
-    return app.exec();
+    return a.exec();
 }
 MyWidget::MyWidget(QWidget *parent) :
     QWidget(parent) {
@@ -23,27 +25,27 @@ MyWidget::MyWidget(QWidget *parent) :
         rectY = 50;
         rectWidth = 200;
         rectHeight = 400;
-        gravity = 0.98; //初始化重力加速度
+        g = 9.8; //初始化重力加速度
 
         // 设置小球的初始位置和速度
         ballX = rectX + 10; // 使小球初始位置在矩形框内部
         ballY = rectY + 10;
-        dx = 6; // 水平方向速度
-        dy = 2; //竖直方向速度
-        r = 20;//设置小球半径
+        dx = 3; // 水平方向速度
+        dy = 4; //竖直方向速度
+        r = 15;//设置小球半径
         q = 0.9;//设置碰撞系数
-
+        t = 30;//定时器更新间隔时间，单位为ms
 
 
 
         // 创建一个定时器，用于更新小球的位置
         QTimer *timer = new QTimer(this);
         connect(timer, &QTimer::timeout, this, &MyWidget::updateBallPosition);
-        timer->start(30); // 每隔30毫秒更新一次小球位置
+        timer->start(t); // 每隔t毫秒更新一次小球位置
+
     }
 
 void MyWidget::paintEvent(QPaintEvent *event){
-
 
     QPainter painter(this);
 
@@ -75,8 +77,7 @@ void MyWidget::updateBallPosition(){
     }
 
 
-
-    dy += gravity;//每次更新小球位置时，垂直速度加上重力加速度
+    dy += (g / 1000 * t);//每次更新小球位置时，垂直速度加上重力加速度,单位换算成秒
 
     // 更新界面，触发重绘事件
     update();

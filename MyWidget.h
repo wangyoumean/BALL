@@ -31,8 +31,9 @@ private:
     int r;
     float dx; // 小球水平方向速度
     float dy; // 小球垂直方向速度
-    float gravity; //重力加速度
+    float g; //重力加速度
     float q;//碰撞系数
+    int t;//定时器更新时间
 
 
 };
