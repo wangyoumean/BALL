@@ -13,9 +13,7 @@ int main(int argc, char *argv[]) {
 
     widget.setWindowTitle("运动小球");
 
-
     widget.show();
-
     return a.exec();
 }
 MyWidget::MyWidget(QWidget *parent) :
@@ -76,14 +74,10 @@ void MyWidget::updateBallPosition(){
         ballY = rectY + rectHeight - 2*r;//限制小球不会掉出矩形框
     }
 
-
     dy += (g / 1000 * t);//每次更新小球位置时，垂直速度加上重力加速度,单位换算成秒
 
     // 更新界面，触发重绘事件
     update();
 }
-
-
-//4.22 接下来的目标，实现开始按钮，以及停止函数，之后最好能做出实时显示坐标的控件
 
 

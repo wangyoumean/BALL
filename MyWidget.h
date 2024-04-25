@@ -1,7 +1,6 @@
 #ifndef MYWIDGET_H
 #define MYWIDGET_H
 
-
 #include <QApplication>
 #include <QWidget>
 #include <QTimer>
@@ -13,11 +12,11 @@ public:
    explicit MyWidget(QWidget *parent = nullptr) ;//explicit用于避免出现隐式类型转换
 
 protected:
-    void paintEvent(QPaintEvent *event) override; //override表明该成员函数用来重写基类中的虚函数
+    void paintEvent(QPaintEvent *event) override ; //override表明该成员函数用来重写基类中的虚函数
 
 
 private slots:
-        void updateBallPosition();//这里只声明函数
+    void updateBallPosition() ;//这里只声明函数
 
 private:
     int rectX; // 矩形框左上角 x 坐标
