@@ -25,14 +25,14 @@ MyWidget::MyWidget(QWidget *parent) :
         rectY = 50;
         rectWidth = 200;
         rectHeight = 400;
-        g = 9.8; //初始化重力加速度
+        g = 12; //初始化重力加速度
 
         // 设置小球的初始位置和速度
         ballX = rectX + 10; // 使小球初始位置在矩形框内部
         ballY = rectY + 10;
         dx = 3; // 水平方向速度
-        dy = 4; //竖直方向速度
-        r = 15;//设置小球半径
+        dy = 6; //竖直方向速度
+        r = 20;//设置小球半径
         q = 0.9;//设置碰撞系数
         t = 30;//定时器更新间隔时间，单位为ms
 

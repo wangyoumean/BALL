@@ -16,9 +16,8 @@ protected:
     void paintEvent(QPaintEvent *event) override; //override表明该成员函数用来重写基类中的虚函数
 
 
-private slots://关于是否采用public slot的问题，等写到控制按钮时再决定
+private slots:
         void updateBallPosition();//这里只声明函数
-        //4.19:迁移完成，再次说明，出现链接问题，请先清除，再重新构建
 
 private:
     int rectX; // 矩形框左上角 x 坐标
@@ -28,7 +27,7 @@ private:
 
     float ballX; // 小球 x 坐标
     float ballY; // 小球 y 坐标
-    int r;
+    int r;  //小球半径
     float dx; // 小球水平方向速度
     float dy; // 小球垂直方向速度
     float g; //重力加速度
