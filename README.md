@@ -17,7 +17,7 @@
  1. qtcreator中一定要选择Desktop_Qt_5_9_9_MinGW_32bit编译器，debug版本，否则，可能出现不明原因错误；
  2. 尽量不要将小球的速度`dx`和`dy`调得过高，以免出现各种错误；
  3. 由于Qt与中文路径的兼容性不好，请务必将文件放在英文路径中；
- 4. 若仍然出现未知错误，可以尝试删除`test_ball.pro`和`test_ball.pro.user`文件后，使用`qtcreator`重新构建和运行；
+ 4. 若出现` no valid settings file could be found`错误，请删除`test_ball.pro.user`文件后，使用`qtcreator`打开，而后点击“项目”，在`Configure project`栏中选择合适的kits，然后点击`configure project`按钮即可重新构建和运行；
  5. 若无法看见运行示例中的gif图片，可能是DNS污染导致的，可以尝试更换网络环境后重试。
 ## 运行示例
 ![image](ball.gif)
