@@ -6,7 +6,7 @@
 int main(int argc, char *argv[]) {
     QApplication a(argc, argv);
 
-    MyWidget widget;
+    MyWidget widget;//窗口设置
     widget.resize(400, 500);//设置界面大小
     widget.move(600,150);
     widget.setFixedSize(widget.width(),widget.height());//锁定界面大小
@@ -16,8 +16,11 @@ int main(int argc, char *argv[]) {
     widget.show();
     return a.exec();
 }
-MyWidget::MyWidget(QWidget *parent) :
-    QWidget(parent) {
+
+MyWidget::MyWidget(QWidget *parent) : QWidget(parent) {
+
+    ballObject = new Ball(parent);
+
         // 设置矩形框的初始位置和大小
         rectX = 50;
         rectY = 50;
@@ -25,12 +28,9 @@ MyWidget::MyWidget(QWidget *parent) :
         rectHeight = 400;
         g = 12; //初始化重力加速度
 
-        // 设置小球的初始位置和速度
-        ballX = rectX + 10; // 使小球初始位置在矩形框内部
-        ballY = rectY + 10;
-        dx = 3; // 水平方向速度
-        dy = 6; //竖直方向速度
-        r = 20;//设置小球半径
+
+
+
         q = 0.9;//设置碰撞系数
         t = 30;//定时器更新间隔时间，单位为ms
 
@@ -38,10 +38,23 @@ MyWidget::MyWidget(QWidget *parent) :
 
         // 创建一个定时器，用于更新小球的位置
         QTimer *timer = new QTimer(this);
-        connect(timer, &QTimer::timeout, this, &MyWidget::updateBallPosition);
+        connect(timer, &QTimer::timeout, ballObject,&Ball::updateBallPosition);
         timer->start(t); // 每隔t毫秒更新一次小球位置
 
     }
+
+
+void Ball::setSpeed(){
+    // 设置小球的初始位置和速度
+    dx = 3; // 水平方向速度
+    dy = 6; //竖直方向速度
+}
+void Ball::setPosition(){
+    ballX = rectX + 10; // 使小球初始位置在矩形框内部
+    ballY = rectY + 10;
+    r = 20;//设置小球半径
+}
+
 
 void MyWidget::paintEvent(QPaintEvent *event){
 
@@ -52,12 +65,12 @@ void MyWidget::paintEvent(QPaintEvent *event){
 
          // 绘制小球
          painter.setBrush(Qt::red); // 设置画刷颜色为红色
-         painter.drawEllipse(ballX, ballY, r*2, r*2); // 小球直径
+         painter.drawEllipse(ballObject->getballX(), ballObject->getballY(), ballObject->getr() * 2, ballObject->getr() * 2); // 小球直径
      }
 
 
 
-void MyWidget::updateBallPosition(){
+void Ball::updateBallPosition(){
     // 小球的运动
     ballX += dx;
     ballY += dy;
