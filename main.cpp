@@ -1,4 +1,3 @@
-
 #include <QApplication>
 #include "MyWidget.h"
 
@@ -17,69 +16,97 @@ int main(int argc, char *argv[]) {
     return a.exec();
 }
 
+MyWidget::MyWidget(QWidget *parent) : QWidget(parent), ball(new Ball), border(), timer(new QTimer(this)){
 
-Ball::Ball(Border* border,float q,float g,int t, QObject *parent)
-    : QObject(parent), border(border),q(q),g(g),t(t),ballX(0), ballY(0), dx(0) , dy(0) , r(20){
-    // 初始化小球位置
+        g = 12; //初始化重力加速度
+        q = 0.9;//设置碰撞系数
+        t = 30;//定时器更新间隔时间，单位为ms
+        border->setPosition(400,500,300,500);
+        ball->setRadius(20);
+
+        // 创建一个定时器，用于更新小球的位置
+        QTimer *timer = new QTimer(this);
+        if (ball){
+        connect(timer, &QTimer::timeout, this, [this]() { this->ball->updateBallPosition(); }); // 连接信号和槽
+        }
+        timer->start(t); // 每隔t毫秒更新一次小球位置
+
+
+    }
+
+
+
+
+void Border::draw(QPainter& painter) const {
+    // 使用传入的 QPainter 绘制矩形
+    painter.drawRect(rectX, rectY, rectWidth, rectHeight);
 }
 
-
-MyWidget::MyWidget(QWidget *parent) : QWidget(parent), g(12), q(0.9), t(30) {
-    border = new Border(50,50,200,400);// 创建矩形框对象
-    ball = new Ball(border, q, g, t); // 创建小球对象
-    ball->setPosition(60, 60);//设置小球初始位置
-    ball->setSpeed(3,6); // 设置小球初始速度
-
-    timer = new QTimer(this); // 创建定时器
-    connect(timer, &QTimer::timeout, this, [this]() { this->ball->updatePosition(); }); // 连接信号和槽
-    timer->start(t); // 启动定时器
+void Ball::draw(QPainter& painter) const {
+    // 使用传入的 QPainter 绘制圆形
+    painter.drawEllipse(ballX, ballY, r * 2, r * 2);
 }
-void Border::setPosition(int x, int y){
-    // 设置矩形框的初始位置和大小
+
+void MyWidget::paintEvent(QPaintEvent *event){
+    Q_UNUSED(event)
+    QPainter painter(this);
+
+
+         // 绘制矩形框
+         border->draw(painter);
+
+         // 绘制小球
+         painter.setBrush(Qt::red); // 设置画刷颜色为红色
+         ball->draw(painter);
+     }
+
+void Border::setPosition(int x , int y , int width , int height){
     rectX = x;
     rectY = y;
-
+    rectWidth = width;
+    rectHeight = height;
 }
 
-void MyWidget::paintEvent(QPaintEvent *event) {
-    QPainter painter(this);
-    // 使用ball和border对象的成员变量来绘制
-    painter.drawRect(border->getX(), border->getY(), border->getWidth(), border->getHeight());
-    painter.setBrush(Qt::red);
-    painter.drawEllipse(ball->ballX, ball->ballY, ball->r * 2, ball->r * 2);
+void Ball::setPosition(float x, float y) {
+    ballX = x;
+    ballY = y;
 }
 
+void Ball::setSpeed(float x, float y) {
+    dx = x;
+    dy = y;
+}
 
+void Ball::setRadius(int radius) {
+    r = radius;
+}
 
+void Ball::updateBallPosition(){
 
+    //设置小球的速度和初始位置
+    setSpeed(3,6);
+    setPosition(border.rectX + 10,border.rectY + 10);
 
-void Ball::updatePosition() {
-    // 更新小球位置的逻辑
+    // 小球的运动
     ballX += dx;
     ballY += dy;
 
-    int rectX = border->getX();
-    int rectY = border->getY();
-    int rectWidth = border->getWidth();
-    int rectHeight = border->getHeight();
-
-    if (ballX <= rectX || ballX >= rectX + rectWidth - 2*r) {
+    if (ballX <= border.rectX || ballX >= border.rectX + border.rectWidth - 2*r) {
         dx = -dx; // 改变水平方向速度方向
-        dx = dx * q;
+        dx = dx * mywidget.q;
     }
 
-    if (ballY <= rectY || ballY >= rectY + rectHeight - 2*r) {
+    if (ballY <= border.rectY || ballY >= border.rectY + border.rectHeight - 2*r) {
         dy = -dy; // 改变垂直方向速度方向
-        dy = dy * q;
+        dy = dy * mywidget.q;
 
-        ballY = rectY + rectHeight - 2*r;//限制小球不会掉出矩形框
+        ballY = border.rectY + border.rectHeight - 2*r;//限制小球不会掉出矩形框
     }
 
-    dy += (g / 1000 * t);//每次更新小球位置时，垂直速度加上重力加速度,单位换算成秒
+    dy += (mywidget.g / 1000 * mywidget.t);//每次更新小球位置时，垂直速度加上重力加速度,单位换算成秒
 
-
-    emit positionChanged(); // 发出位置改变的信号
+    // 更新界面，触发重绘事件
+    mywidget.update();
 }
-
 
 
