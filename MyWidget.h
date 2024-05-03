@@ -14,7 +14,7 @@ class MyWidget : public QWidget {
     Q_OBJECT
 public:
     explicit MyWidget(QWidget *parent = nullptr) ;//explicit用于避免出现隐式类型转换
-
+    ~MyWidget();
     friend class Ball;
     private:
     void paintEvent(QPaintEvent *event) override ; //override表明该成员函数用来重写基类中的虚函数
@@ -36,6 +36,7 @@ public:
     void setPosition(int x , int y , int width , int height);
     void draw(QPainter& painter) const;
     friend class Ball;
+
 protected:
     int rectX;//矩形框左上角x坐标
     int rectY;//矩形框左上角y坐标
@@ -47,7 +48,7 @@ protected:
 class Ball {
 
 public:
-
+    Ball(MyWidget *widget, Border *border);
     void setPosition(float x, float y);
     void setSpeed(float x,float y);
     void setRadius(int radius);
@@ -61,8 +62,8 @@ private:
     int r;  //小球半径
     float dx; // 小球水平方向速度
     float dy; // 小球垂直方向速度
-    MyWidget mywidget;
-    Border border;
+    MyWidget *mywidget;
+    Border *border;
 
 };
 #endif // MYWIDGET_H

@@ -16,16 +16,17 @@ int main(int argc, char *argv[]) {
     return a.exec();
 }
 
-MyWidget::MyWidget(QWidget *parent) : QWidget(parent), ball(new Ball), border(), timer(new QTimer(this)){
+MyWidget::MyWidget(QWidget *parent) : QWidget(parent), border(new Border), ball(new Ball(this,border)),timer(new QTimer(this)){
 
         g = 12; //初始化重力加速度
         q = 0.9;//设置碰撞系数
         t = 30;//定时器更新间隔时间，单位为ms
-        border->setPosition(400,500,300,500);
-        ball->setRadius(20);
+        border->setPosition(400,500,300,500);//设置矩形框左上角的X、Y坐标、宽度和高度
+        ball->setRadius(20);//设置小球的半径
+
 
         // 创建一个定时器，用于更新小球的位置
-        QTimer *timer = new QTimer(this);
+
         if (ball){
         connect(timer, &QTimer::timeout, this, [this]() { this->ball->updateBallPosition(); }); // 连接信号和槽
         }
@@ -34,8 +35,15 @@ MyWidget::MyWidget(QWidget *parent) : QWidget(parent), ball(new Ball), border(),
 
     }
 
+MyWidget::~MyWidget() {
+    delete ball; // 释放 ball 指针指向的内存
+    delete border; // 释放 border 指针指向的内存
+    // 不需要删除 timer，因为 Qt 会自动处理它
+}
 
+Ball::Ball(MyWidget* widget, Border* border) : mywidget(widget), border(border) {
 
+}
 
 void Border::draw(QPainter& painter) const {
     // 使用传入的 QPainter 绘制矩形
@@ -50,7 +58,6 @@ void Ball::draw(QPainter& painter) const {
 void MyWidget::paintEvent(QPaintEvent *event){
     Q_UNUSED(event)
     QPainter painter(this);
-
 
          // 绘制矩形框
          border->draw(painter);
@@ -85,28 +92,28 @@ void Ball::updateBallPosition(){
 
     //设置小球的速度和初始位置
     setSpeed(3,6);
-    setPosition(border.rectX + 10,border.rectY + 10);
+    setPosition(border->rectX + 10,border->rectY + 10);
 
     // 小球的运动
     ballX += dx;
     ballY += dy;
 
-    if (ballX <= border.rectX || ballX >= border.rectX + border.rectWidth - 2*r) {
+    if (ballX <= border->rectX || ballX >= border->rectX + border->rectWidth - 2*r) {
         dx = -dx; // 改变水平方向速度方向
-        dx = dx * mywidget.q;
+        dx = dx * mywidget->q;
     }
 
-    if (ballY <= border.rectY || ballY >= border.rectY + border.rectHeight - 2*r) {
+    if (ballY <= border->rectY || ballY >= border->rectY + border->rectHeight - 2*r) {
         dy = -dy; // 改变垂直方向速度方向
-        dy = dy * mywidget.q;
+        dy = dy * mywidget->q;
 
-        ballY = border.rectY + border.rectHeight - 2*r;//限制小球不会掉出矩形框
+        ballY = border->rectY + border->rectHeight - 2*r;//限制小球不会掉出矩形框
     }
 
-    dy += (mywidget.g / 1000 * mywidget.t);//每次更新小球位置时，垂直速度加上重力加速度,单位换算成秒
+    dy += (mywidget->g / 1000 * mywidget->t);//每次更新小球位置时，垂直速度加上重力加速度,单位换算成秒
 
     // 更新界面，触发重绘事件
-    mywidget.update();
+    mywidget->update();
 }
 
 
